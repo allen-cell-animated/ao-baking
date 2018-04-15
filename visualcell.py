@@ -120,18 +120,19 @@ inputfilenames = [
   # 'ST6GAL1-M5',
   # 'ST6GAL1-M6',
   # 'SEC61B-M6',
-    'TUBA1B-M1',
-    'TUBA1B-M3',
+                  #  'TUBA1B-M1',
+                  #  'TUBA1B-M3',
     'TUBA1B-M5',
-    'TUBA1B-M6',
-    'TUBA1B-M7'
+                  # 'TUBA1B-M6',
+                  #  'TUBA1B-M7'
 ]
 
-print(inputfilenames)
+print("inputfilenames = ", inputfilenames)
 #loadpath = "/Users/meganr/Dropbox/visual_cell_maker_files/objs-to-process"
 #outputBasePath = "/Users/meganr/Dropbox/Structures_for_Visual_Cell"
-loadpath = "/Users/grahamj/Desktop/ao-baking-master/Input-OBJs"
-outputBasePath = "/Users/grahamj/Desktop/ao-baking-master/Output-AOs"
+#loadpath = "/Users/grahamj/Desktop/ao-baking-master/Input-OBJs"
+loadpath = "/Volumes/aics/animated-cell/Allen-Cell-Explorer/3d-Vis-Summary-data_1.0.1/objs-to-process"
+outputBasePath = "/Volumes/aics/animated-cell/Allen-Cell-Explorer/3d-Vis-Summary-data_1.0.1/Structures_for_Visual_Cell"
 
 fileNames = [None, 'membrane', 'nucleus', 'structure']
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -168,7 +169,7 @@ def do_one_file(inputfile):
     print(outputDirectory)
     inputfile = inputfile + '.obj'
 
-    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file.c4d'))
+    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file_2.c4d'))
     doc = helper.getCurrentScene()
 
     filename = inputfile
@@ -185,7 +186,7 @@ def do_one_file(inputfile):
 
     tp = target_obj.GetDown()
     while tp is not None:
-        print(tp.GetName())
+        print("tp name = ", tp.GetName())
         i = int(tp.GetName()[-1])
         doc.SetSelection(tp)
 
@@ -199,19 +200,30 @@ def do_one_file(inputfile):
         c4d.CallCommand(14039, 14039) # Optimize
 
         # doc.InsertObject(smoothing_deformer)
-        reducer = c4d.BaseObject(1001253) # Polgyon reduction
-        reducer[c4d.POLYREDUCTIONOBJECT_STRENGTH] = settings[i]['polygonReduction']
-        helper.setName(reducer, "Polygon_Reduction_"+tp.GetName())
-        helper.AddObject(reducer, parent=tp)
+#        reducer = c4d.BaseObject(1001253) # Polgyon reduction
+#        reducer[c4d.POLYREDUCTIONOBJECT_STRENGTH] = settings[i]['polygonReduction']
+#        helper.setName(reducer, "Polygon_Reduction_"+tp.GetName())
+#        helper.AddObject(reducer, parent=tp)
 
-        displacer = helper.getObject("displacer_" + str(i))
-        helper.reParent(displacer, tp)
+#     displacer = helper.getObject("displacer_" + str(i))
+#       helper.reParent(displacer, tp)
+        if i == 1:
+            CellMembraneHolster = helper.getObject("Holster_1")
+            while CellMembraneHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(CellMembraneHolster.GetDown(), tp)
+        if i == 2:
+            DNAHolster = helper.getObject("Holster_2")
+            while DNAHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(DNAHolster.GetDown(), tp)
+        if i == 3:
+            StructureHolster = helper.getObject("Holster_3")
+            while StructureHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(StructureHolster.GetDown(), tp)
 
-        smoothing_deformer = c4d.BaseObject(1024529) # smoothing deformer
-        # smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_ITERATIONS] = settings[i]['smoothIterations']
-        smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_STRENGTH] = settings[i]['smoothStrength']
-        helper.setName(smoothing_deformer, "Smoothing_"+tp.GetName())
-        helper.AddObject(smoothing_deformer, parent=tp)
+#        smoothing_deformer = c4d.BaseObject(1024529) # smoothing deformer
+#        smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_STRENGTH] = settings[i]['smoothStrength']
+#        helper.setName(smoothing_deformer, "Smoothing_"+tp.GetName())
+#        helper.AddObject(smoothing_deformer, parent=tp)
 
         tp = tp.GetNext()
 
@@ -231,7 +243,8 @@ def do_one_file(inputfile):
 
     # return
 
-    c4d.documents.SaveDocument(doc, os.path.join(current_dir, 'gj.c4d'), c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_C4DEXPORT)
+#   c4d.documents.SaveDocument(doc, os.path.join(current_dir, 'gj.c4d'), c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_C4DEXPORT)
+    c4d.documents.SaveDocument(doc, os.path.join(outputDirectory, inputStructure + '_prebake' + '.c4d'), c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_C4DEXPORT)
 
 
     print("deleting original target object")
