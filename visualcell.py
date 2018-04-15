@@ -62,11 +62,11 @@ inputStages = [
 
 outputStructures = {
     "ACTB": "actin-filaments",
-    "ACTN1": "sarcomere",
-    "CENT2": "centrosome",
+    "ACTN1": "sarcomeres",
+    "CENT2": "centrosomes",
     "DSP": "desomsomes",
-    "FBL": "nucleolus",
-    "LAMP1": "lysosome",
+    "FBL": "nucleoli",
+    "LAMP1": "lysosomes",
     "LMNB1": "nuclear-envelope",
     "MYH10": "actomyosin-bundles",
     "PMP34": "peroxisomes",
@@ -86,10 +86,10 @@ outputStages = {
     "M7": "cytokinesis-telophase"
 }
 
-# inputfilenames = ['%s-%s' % (x,y) for x in ["TJP1"] for y in inputStages]
+inputfilenames = ['%s-%s' % (x,y) for x in inputStructures for y in inputStages]
 
 # add to this list to process a cell.
-inputfilenames = [
+#inputfilenames = [
   # 'TOMM20-Int',
   # 'TOMM20-M7',
   # 'TUBA1B-Int',
@@ -122,10 +122,10 @@ inputfilenames = [
   # 'SEC61B-M6',
                   #  'TUBA1B-M1',
                   #  'TUBA1B-M3',
-    'TUBA1B-M5',
+                  #   'TUBA1B-M5',
                   # 'TUBA1B-M6',
                   #  'TUBA1B-M7'
-]
+#]
 
 print("inputfilenames = ", inputfilenames)
 #loadpath = "/Users/meganr/Dropbox/visual_cell_maker_files/objs-to-process"
