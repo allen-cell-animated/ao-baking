@@ -1,3 +1,29 @@
+## Exporting from UCSF Chimera
+1. You need to use original chimera because it saves nested obj files. 
+2. Your script should 
+  * open all the files, 
+  * set voxelSize (if needs to be adjusted) `volume # voxelSize 0.065,0.065,0.29;` 
+  * set the step `volume # step 1;`
+  * set the level, `volume #0 level 0.0562;`
+  * and then save it as an .obj: `export ${exportPath}/mitochondria-M1.obj;`
+Example template: 
+```JavaScript
+const exportPath = '/Users/meganr/Dropbox/visual_cell_maker_files/objs-to-process'
+module.exports = (mitosis, structure, voxelSize, memLevel, dnaLevel, structureLevel) =>
+  `open /Users/meganr/Dropbox/visual_cell_maker_files/${structure}/${mitosis}/*.tiff;
+
+volume # voxelSize ${voxelSize};
+
+volume # step 1;
+volume #0 level ${memLevel};
+volume #1 level ${dnaLevel};
+volume #2 level ${structureLevel};
+
+export ${exportPath}/${structure}-${mitosis}.obj;
+
+close all;
+```
+
 # ao-baking
 
 1. Open C4D
