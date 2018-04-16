@@ -169,7 +169,7 @@ def do_one_file(inputfile):
     print(outputDirectory)
     inputfile = inputfile + '.obj'
 
-    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file_2.c4d'))
+    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file.c4d'))
     doc = helper.getCurrentScene()
 
     filename = inputfile
