@@ -20,21 +20,18 @@ from c4d import documents, plugins
 settings = [
     None,
     {
-        'smoothIterations': 30,
         'polygonReduction': .99,
         'smoothStrength': 1.0,
 
     },
     {
-        'smoothIterations': 20,
         'polygonReduction': .95,
         'smoothStrength': 1.0,
 
     },
     {
-        'smoothIterations': 10,
         'polygonReduction': .90,
-        'smoothStrength': 1.0,
+        'smoothStrength': 0.2,
     },
 ]
 
@@ -65,11 +62,11 @@ inputStages = [
 
 outputStructures = {
     "ACTB": "actin-filaments",
-    "ACTN1": "sarcomere",
-    "CENT2": "centrosome",
+    "ACTN1": "actin-bundles",
+    "CENT2": "centrosomes",
     "DSP": "desomsomes",
-    "FBL": "nucleolus",
-    "LAMP1": "lysosome",
+    "FBL": "nucleoli",
+    "LAMP1": "lysosomes",
     "LMNB1": "nuclear-envelope",
     "MYH10": "actomyosin-bundles",
     "PMP34": "peroxisomes",
@@ -77,7 +74,7 @@ outputStructures = {
     "ST6GAL1": "golgi-apparatus",
     "TJP1": "tight-junctions",
     "TOMM20": "mitochondria",
-    "TUBA1B": "microtubles",
+    "TUBA1B": "microtubules",
 }
 
 outputStages = {
@@ -89,10 +86,10 @@ outputStages = {
     "M7": "cytokinesis-telophase"
 }
 
-# inputfilenames = ['%s-%s' % (x,y) for x in ["TJP1"] for y in inputStages]
+inputfilenames = ['%s-%s' % (x,y) for x in inputStructures for y in inputStages]
 
 # add to this list to process a cell.
-inputfilenames = [
+#inputfilenames = [
   # 'TOMM20-Int',
   # 'TOMM20-M7',
   # 'TUBA1B-Int',
@@ -123,11 +120,19 @@ inputfilenames = [
   # 'ST6GAL1-M5',
   # 'ST6GAL1-M6',
   # 'SEC61B-M6',
-]
+                  #  'TUBA1B-M1',
+                  #  'TUBA1B-M3',
+                  #   'TUBA1B-M5',
+                  # 'TUBA1B-M6',
+                  #  'TUBA1B-M7'
+#]
 
-print(inputfilenames)
-loadpath = "/Users/meganr/Dropbox/visual_cell_maker_files/objs-to-process"
-outputBasePath = "/Users/meganr/Dropbox/Structures_for_Visual_Cell"
+print("inputfilenames = ", inputfilenames)
+#loadpath = "/Users/meganr/Dropbox/visual_cell_maker_files/objs-to-process"
+#outputBasePath = "/Users/meganr/Dropbox/Structures_for_Visual_Cell"
+#loadpath = "/Users/grahamj/Desktop/ao-baking-master/Input-OBJs"
+loadpath = "/Volumes/aics/animated-cell/Allen-Cell-Explorer/3d-Vis-Summary-data_1.0.1/objs-to-process"
+outputBasePath = "/Volumes/aics/animated-cell/Allen-Cell-Explorer/3d-Vis-Summary-data_1.0.1/Structures_for_Visual_Cell"
 
 fileNames = [None, 'membrane', 'nucleus', 'structure']
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -164,7 +169,7 @@ def do_one_file(inputfile):
     print(outputDirectory)
     inputfile = inputfile + '.obj'
 
-    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file.c4d'))
+    c4d.documents.LoadFile(os.path.join(current_dir, 'base-visual-cell-maker-file_2.c4d'))
     doc = helper.getCurrentScene()
 
     filename = inputfile
@@ -181,7 +186,7 @@ def do_one_file(inputfile):
 
     tp = target_obj.GetDown()
     while tp is not None:
-        print(tp.GetName())
+        print("tp name = ", tp.GetName())
         i = int(tp.GetName()[-1])
         doc.SetSelection(tp)
 
@@ -195,19 +200,30 @@ def do_one_file(inputfile):
         c4d.CallCommand(14039, 14039) # Optimize
 
         # doc.InsertObject(smoothing_deformer)
-        reducer = c4d.BaseObject(1001253) # Polgyon reduction
-        reducer[c4d.POLYREDUCTIONOBJECT_STRENGTH] = settings[i]['polygonReduction']
-        helper.setName(reducer, "Polygon_Reduction_"+tp.GetName())
-        helper.AddObject(reducer, parent=tp)
+#        reducer = c4d.BaseObject(1001253) # Polgyon reduction
+#        reducer[c4d.POLYREDUCTIONOBJECT_STRENGTH] = settings[i]['polygonReduction']
+#        helper.setName(reducer, "Polygon_Reduction_"+tp.GetName())
+#        helper.AddObject(reducer, parent=tp)
 
-        displacer = helper.getObject("displacer_" + str(i))
-        helper.reParent(displacer, tp)
+#     displacer = helper.getObject("displacer_" + str(i))
+#       helper.reParent(displacer, tp)
+        if i == 1:
+            CellMembraneHolster = helper.getObject("Holster_1")
+            while CellMembraneHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(CellMembraneHolster.GetDown(), tp)
+        if i == 2:
+            DNAHolster = helper.getObject("Holster_2")
+            while DNAHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(DNAHolster.GetDown(), tp)
+        if i == 3:
+            StructureHolster = helper.getObject("Holster_3")
+            while StructureHolster.GetDown() is not None: # tp is not None:
+                helper.reParent(StructureHolster.GetDown(), tp)
 
-        smoothing_deformer = c4d.BaseObject(1024529) # smoothing deformer
-        smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_ITERATIONS] = settings[i]['smoothIterations']
-        smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_STRENGTH] = settings[i]['smoothStrength']
-        helper.setName(smoothing_deformer, "Smoothing_"+tp.GetName())
-        helper.AddObject(smoothing_deformer, parent=tp)
+#        smoothing_deformer = c4d.BaseObject(1024529) # smoothing deformer
+#        smoothing_deformer[c4d.ID_CA_SMOOTHING_DEFORMER_OBJECT_STRENGTH] = settings[i]['smoothStrength']
+#        helper.setName(smoothing_deformer, "Smoothing_"+tp.GetName())
+#        helper.AddObject(smoothing_deformer, parent=tp)
 
         tp = tp.GetNext()
 
@@ -224,6 +240,12 @@ def do_one_file(inputfile):
     doc.SetSelection(target_obj)
     target_obj[c4d.ID_BASEOBJECT_VISIBILITY_RENDER] = 1
     c4d.EventAdd()
+
+    # return
+
+#   c4d.documents.SaveDocument(doc, os.path.join(current_dir, 'gj.c4d'), c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_C4DEXPORT)
+    c4d.documents.SaveDocument(doc, os.path.join(outputDirectory, inputStructure + '_prebake' + '.c4d'), c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_C4DEXPORT)
+
 
     print("deleting original target object")
     target_obj.Remove()
@@ -261,15 +283,17 @@ def do_one_file(inputfile):
 
         uvw = uvset.GetUVW()
 
-        uv_ok = c4d.modules.bodypaint.CallUVCommand(uvset.GetPoints(),
-            uvset.GetPointCount(),
-            uvset.GetPolys(),
-            uvset.GetPolyCount(),
-            uvw,
-            uvset.GetPolySel(),
-            uvset.GetUVPointSel(),
-            tp, c4d.Mpolygons, c4d.UVCOMMAND_OPTIMALMAPPING, uvsettings)
-        print("call uv command:", uv_ok)
+      #  if tp.GetName()[-2:] == '_2': #switch these ifs for expensive structures during debugging
+        if 1 == 1:
+            uv_ok = c4d.modules.bodypaint.CallUVCommand(uvset.GetPoints(),
+                uvset.GetPointCount(),
+                uvset.GetPolys(),
+                uvset.GetPolyCount(),
+                uvw,
+                uvset.GetPolySel(),
+                uvset.GetUVPointSel(),
+                tp, c4d.Mpolygons, c4d.UVCOMMAND_OPTIMALMAPPING, uvsettings)
+            print("call uv command:", uv_ok)
 
         uvset.SetUVWFromTextureView(uvw, True, True, True)
         c4d.modules.bodypaint.FreeActiveUVSet(uvset)
@@ -304,8 +328,9 @@ def do_one_file(inputfile):
             # switch object off
             membraneobj[c4d.ID_BASEOBJECT_VISIBILITY_RENDER]=1
 
-        print("reparent to subdiv for baking")
-        helper.reParent(tp, subdiv)
+        if tp.GetName()[-2:] != '_2': # do not subdivide the nucleus before baking
+            print("reparent to subdiv for baking")
+            helper.reParent(tp, subdiv)
 
 
         bake = c4d.BaseContainer()
@@ -372,6 +397,7 @@ def main():
         c4d.CallCommand(170009, 170009) # Show UV Mesh
     for structure in inputfilenames:
         do_one_file(structure)
+        print("structure = ", structure)
 
 if __name__=='__main__':
     main()
