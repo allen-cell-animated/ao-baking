@@ -62,7 +62,7 @@ inputStages = [
 
 outputStructures = {
     "ACTB": "actin-filaments",
-    "ACTN1": "sarcomeres",
+    "ACTN1": "actin-bundles",
     "CENT2": "centrosomes",
     "DSP": "desomsomes",
     "FBL": "nucleoli",
