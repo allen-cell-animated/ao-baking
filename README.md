@@ -1,5 +1,5 @@
 ## Exporting from UCSF Chimera
-1. You need to use original chimera because it saves nested obj files. 
+1. You need to use original chimera because it saves nested obj files. [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/download.html)
 2. Your script should 
   * open all the files, 
   * set voxelSize (if needs to be adjusted) `volume # voxelSize 0.065,0.065,0.29;` 
