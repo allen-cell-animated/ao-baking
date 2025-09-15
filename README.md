@@ -1,3 +1,8 @@
+"> [!IMPORTANT]
+> We are no longer actively maintaining this repository. All active work by the Allen Institute for Cell Science is located under the **[AllenCell](https://github.com/AllenCell)** organization."<img width="554" height="65" alt="image" src="https://github.com/user-attachments/assets/9c052303-f0ae-4386-94a2-3e43b8382391" />
+
+
+
 ## Exporting from UCSF Chimera
 1. You need to use original chimera because it saves nested obj files. [UCSF Chimera](https://www.cgl.ucsf.edu/chimera/download.html)
 2. Your script should 
