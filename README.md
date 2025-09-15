@@ -1,5 +1,5 @@
-"> [!IMPORTANT]
-> We are no longer actively maintaining this repository. All active work by the Allen Institute for Cell Science is located under the **[AllenCell](https://github.com/AllenCell)** organization."<img width="554" height="65" alt="image" src="https://github.com/user-attachments/assets/9c052303-f0ae-4386-94a2-3e43b8382391" />
+> [!IMPORTANT]
+> We are no longer actively maintaining this repository. All active work by the Allen Institute for Cell Science is located under the **[AllenCell](https://github.com/AllenCell)** organization.
 
 
 
